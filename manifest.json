@@ -1,19 +1,157 @@
 {
   "v2": {
     "transposit": {
+      "dependencies": [{
+        "name": "transposit/slack:v3.*.*",
+        "alias": "slack_away"
+      }, {
+        "name": "transposit/slack:v3.*.*",
+        "alias": "slack_home"
+      }],
       "operations": [{
-        "id": "hello_world",
-        "description": "Returns \"Hello, world\" in different languages",
+        "id": "post_home",
+        "tql": {
+          "parameters": [{
+            "name": "channel",
+            "type": "STRING"
+          }, {
+            "name": "body",
+            "type": "STRING"
+          }, {
+            "name": "title",
+            "type": "STRING"
+          }],
+          "tql": "SELECT * FROM slack_home.post_chat_message\n  WHERE $body=(SELECT {\n    'link_names' : true,\n    'as_user': true,\n    'channel' : @channel,\n  \t'text' : @title,\n    'attachments' : [\n     {\n       'text': @body,\n     }\n    ]\n  })\n"
+        }
+      }, {
+        "id": "post_away",
+        "description": "The Slack API call to send the return message to the user in the away organization.",
+        "tql": {
+          "parameters": [{
+            "name": "text",
+            "type": "STRING"
+          }, {
+            "name": "channel",
+            "type": "STRING"
+          }],
+          "tql": "SELECT * FROM slack_away.post_chat_message\n  WHERE $body=(SELECT {\n    'link_names' : true,\n    'as_user': true,\n    'channel' : @channel,\n  \t'text' : @text,\n  })\n"
+        }
+      }, {
+        "id": "webhook_away",
         "function": {
-          "js": "hello_world.js"
+          "parameters": [{
+            "name": "http_event",
+            "default": {
+              "text": "{   \"query_parameters\": {     \"api_key\": \"XXX\"   },   \"http_method\": \"POST\",   \"parsed_body\": {     \"channel_name\": \"XXX\",     \"user_id\": \"UXXX\",     \"user_name\": \"iggy\",     \"trigger_id\": \"XXX\",     \"team_domain\": \"my_domain\",     \"team_id\": \"TXXX\",     \"text\": \"\",     \"channel_id\": \"DXXX\",     \"command\": \"/test\",     \"token\": \"XXX\",     \"response_url\": \"https://hooks.slack.com/commands/TXXX/XXX/XXX\"   },   \"body\": \"token=XXX&team_id=TXXX&team_domain=my_domain&channel_id=DXXX&channel_name=XXX&user_id=UXXX&user_name=iggy&command=%2Ftest&text=&response_url=https%3A%2F%2Fhooks.slack.com%2Fcommands%2FTXXX%2FXXX%2FXXX&trigger_id=XXX\" }"
+            },
+            "type": "OBJECT"
+          }],
+          "js": "webhook.js",
+          "lang": "js"
         },
         "access": {
-          "requireUser": true
+          "requireApiKey": true,
+          "webhook": true
+        }
+      }, {
+        "id": "webhook_home",
+        "function": {
+          "parameters": [{
+            "name": "http_event",
+            "default": {
+              "text": "{\"http_method\": \"GET\", \"query_parameters\": {}, \"headers\": {}, \"body\": \"\"}"
+            },
+            "type": "OBJECT"
+          }],
+          "js": "webhook_reply.js",
+          "lang": "js"
+        },
+        "access": {
+          "requireApiKey": true,
+          "webhook": true
+        }
+      }],
+      "dataConnections": [{
+        "ref": "slack_identify.raw",
+        "overrides": {
+          "swagger": {
+            "oauthConfig": {
+              "scope": "identity.basic"
+            },
+            "executionLimits": {
+            }
+          }
+        },
+        "title": "Slack",
+        "description": "Used to identify you on Slack"
+      }, {
+        "ref": "slack_bot.raw",
+        "overrides": {
+          "swagger": {
+            "oauthConfig": {
+              "scope": "chat:write:bot"
+            },
+            "executionLimits": {
+            }
+          }
+        }
+      }, {
+        "ref": "slack.raw",
+        "overrides": {
+          "swagger": {
+            "oauthConfig": {
+            },
+            "executionLimits": {
+            }
+          }
+        }
+      }, {
+        "ref": "slack_transposit.raw",
+        "overrides": {
+          "swagger": {
+            "oauthConfig": {
+              "scope": "bot chat:write:bot",
+              "accessTokenPath": "bot.bot_access_token"
+            },
+            "executionLimits": {
+            }
+          }
+        }
+      }, {
+        "ref": "slack_away.raw",
+        "overrides": {
+          "swagger": {
+            "oauthConfig": {
+              "scope": "bot,chat:write:bot,users.profile:read ",
+              "accessTokenPath": "bot.bot_access_token"
+            },
+            "executionLimits": {
+            }
+          }
+        }
+      }, {
+        "ref": "slack_home.raw",
+        "overrides": {
+          "swagger": {
+            "oauthConfig": {
+              "scope": "bot chat:write:bot",
+              "accessTokenPath": "bot.bot_access_token"
+            },
+            "executionLimits": {
+            }
+          }
         }
       }],
       "javascriptAPIVersion": "3",
       "source": "src",
-      "userSettingsDisplay": "GENERATED"
-    }
+      "userSettingsDisplay": "GENERATED",
+      "appSettings": [{
+        "name": "home",
+        "description": "The Slack ID of the home channel",
+        "type": "STRING"
+      }]
+    },
+    "description": "An app that allows you to have users in other workspace communicate with your home workspace through a DM.",
+    "displayName": "Slack Portal"
   }
 }
