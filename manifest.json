@@ -7,6 +7,9 @@
       }, {
         "name": "transposit/slack:v3.*.*",
         "alias": "slack_home"
+      }, {
+        "name": "transposit/slack:v3.*.*",
+        "alias": "slack"
       }],
       "operations": [{
         "id": "post_home",
