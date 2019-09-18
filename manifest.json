@@ -79,16 +79,6 @@
           "requireApiKey": true,
           "webhook": true
         }
-      }, {
-        "id": "get_channels_history",
-        "tql": {
-          "tql": "SELECT * FROM slack.get_channels_history WHERE channel=@channel AND ts=@ts\n\n/*\n * For sample code and reference material, visit\n * https://www.transposit.com/docs/get-started/sql-quickstart\n */"
-        }
-      }, {
-        "id": "get_conversations_history",
-        "tql": {
-          "tql": "SELECT * FROM slack.get_conversations_history\n  WHERE channel='CL131ST0E'\n  AND ts='1568843325.000600'\n\n/*\n * For sample code and reference material, visit\n * https://www.transposit.com/docs/get-started/sql-quickstart\n */"
-        }
       }],
       "dataConnections": [{
         "ref": "slack_identify.raw",

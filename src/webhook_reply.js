@@ -10,9 +10,11 @@
   }
   // Check for thread events only
   if (body.event.thread_ts && !http_event.headers['X-Slack-Retry-Num']) {
-    let message = api.query("SELECT * FROM slack.get_channels_history WHERE channel=@channel AND ts=@ts", {channel: env.get('home'), ts: body.event.thread_ts});
-    return message;
-	api.run('this.post_away', {channel: stash.get(body.event.thread_ts), text: body.event.text});
+    // Look for the parent message by thread timestamp
+    let message = api.query("SELECT * FROM slack.get_channels_history WHERE channel=@channel AND ts=@ts", {channel: env.get('home'), ts: body.event.thread_ts})[0];
+    /* If you would like to see the workspace id, it is stored below
+    let workspace = message.text; */
+	api.run('this.post_away', {channel: message.blocks[0].block_id, text: body.event.text});
   }
   return { status_code: 200 };
 }
