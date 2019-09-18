@@ -134,7 +134,7 @@
         "overrides": {
           "swagger": {
             "oauthConfig": {
-              "scope": "bot chat:write:bot",
+              "scope": "bot",
               "accessTokenPath": "bot.bot_access_token"
             },
             "executionLimits": {
