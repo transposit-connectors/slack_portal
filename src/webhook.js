@@ -10,7 +10,7 @@
   }
   // Ignore bot users (mainly yourself)
   if (!body.event.bot_id && !http_event.headers['X-Slack-Retry-Num']) {
-    let user = api.query("SELECT user.profile FROM slack_away.get_users_info WHERE user=@user", {user: body.event.user})[0];
+    let user = api.query("SELECT user.profile FROM slack_away.get_users_info WHERE user=@user", {user: body.event.user})[0].profile;
     let team = api.run('slack_away.get_team_info')[0].team;
     let title = `Message from *${user.real_name}* in workspace *${team.name}*:`;
     // Set the home channel id you want the messages to send to in environment variables

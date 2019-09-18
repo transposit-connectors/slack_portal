@@ -30,7 +30,7 @@
             "name": "title",
             "type": "STRING"
           }],
-          "tql": "SELECT * FROM slack_home.post_chat_message\n  WHERE $body=(SELECT {\n    'link_names' : true,\n    'as_user': true,\n    'channel' : @channel,\n  \t'text': @workspace,\n    'blocks': [\n\t  {\n\t\t\"type\": \"context\",\n      \t\"block_id\": @user,\n\t\t\"elements\": [\n\t  \t  {\n\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\"text\": @title\n\t\t  }\n\t\t]\n\t  },\n\t  {\n\t\t\"type\": \"section\",\n\t\t\"text\": {\n\t\t  \"type\": \"mrkdwn\",\n\t\t  \"text\": @body\n\t\t}\n\t  }\n\t]\n  })\n"
+          "tql": "SELECT * FROM slack_home.post_chat_message\n  WHERE $body=(SELECT {\n    'link_names' : true,\n    'as_user': true,\n    'channel' : @channel,\n  \t'text' : @workspace,\n    'blocks' : [\n\t  {\n\t\t\"type\": \"context\",\n      \t\"block_id\": @user,\n\t\t\"elements\": [\n\t\t  {\n\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\"text\": @title\n\t\t  }\n\t\t]\n\t  },\n\t  {\n\t\t\"type\": \"section\",\n\t\t\"text\": {\n\t\t  \"type\": \"mrkdwn\",\n\t\t  \"text\": @body\n\t\t}\n\t  }\n\t]\n  })\n"
         }
       }, {
         "id": "post_away",
@@ -78,6 +78,16 @@
         "access": {
           "requireApiKey": true,
           "webhook": true
+        }
+      }, {
+        "id": "get_channels_history",
+        "tql": {
+          "tql": "SELECT * FROM slack.get_channels_history WHERE channel=@channel AND ts=@ts\n\n/*\n * For sample code and reference material, visit\n * https://www.transposit.com/docs/get-started/sql-quickstart\n */"
+        }
+      }, {
+        "id": "get_conversations_history",
+        "tql": {
+          "tql": "SELECT * FROM slack.get_conversations_history\n  WHERE channel='CL131ST0E'\n  AND ts='1568843325.000600'\n\n/*\n * For sample code and reference material, visit\n * https://www.transposit.com/docs/get-started/sql-quickstart\n */"
         }
       }],
       "dataConnections": [{
