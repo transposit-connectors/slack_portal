@@ -18,10 +18,16 @@
             "name": "body",
             "type": "STRING"
           }, {
+            "name": "user",
+            "type": "STRING"
+          }, {
+            "name": "workspace",
+            "type": "STRING"
+          }, {
             "name": "title",
             "type": "STRING"
           }],
-          "tql": "SELECT * FROM slack_home.post_chat_message\n  WHERE $body=(SELECT {\n    'link_names' : true,\n    'as_user': true,\n    'channel' : @channel,\n  \t'text' : @title,\n    'attachments' : [\n     {\n       'text': @body,\n     }\n    ]\n  })\n"
+          "tql": "SELECT * FROM slack_home.post_chat_message\n  WHERE $body=(SELECT {\n    'link_names' : true,\n    'as_user': true,\n    'channel' : @channel,\n  \t'text' : @title,\n    'attachments' : [\n     {\n       'author_subname' : @user,\n       'channel_name': \"Direct Message\",\n       'channel_id': @workspace,\n       'text': @body,\n     }\n    ]\n  })\n"
         }
       }, {
         "id": "post_away",
