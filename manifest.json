@@ -30,7 +30,7 @@
             "name": "title",
             "type": "STRING"
           }],
-          "tql": "SELECT * FROM slack_home.post_chat_message\n  WHERE $body=(SELECT {\n    'link_names' : true,\n    'as_user': true,\n    'channel' : @channel,\n  \t'text' : @workspace,\n    'blocks' : [\n\t  {\n\t\t\"type\": \"context\",\n      \t\"block_id\": @user,\n\t\t\"elements\": [\n\t\t  {\n\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\"text\": @title\n\t\t  }\n\t\t]\n\t  },\n\t  {\n\t\t\"type\": \"section\",\n\t\t\"text\": {\n\t\t  \"type\": \"mrkdwn\",\n\t\t  \"text\": @body\n\t\t}\n\t  }\n\t]\n  })\n"
+          "tql": "SELECT * FROM slack_home.post_chat_message\n  WHERE $body=(SELECT {\n    'link_names' : true,\n    'as_user': true,\n    'channel' : @channel,\n  \t'text' : @workspace,\t-- This is a hidden value in Slack that is visible in the JSON.\n    'blocks' : [\n\t  {\n\t\t\"type\": \"context\",\n      \t\"block_id\": @user,\t-- This is a hidden value in Slack that is visible in the JSON.\n\t\t\"elements\": [\n\t\t  {\n\t\t\t\"type\": \"mrkdwn\",\n\t\t\t\"text\": @title\n\t\t  }\n\t\t]\n\t  },\n\t  {\n\t\t\"type\": \"section\",\n\t\t\"text\": {\n\t\t  \"type\": \"mrkdwn\",\n\t\t  \"text\": @body\n\t\t}\n\t  }\n\t]\n  })\n"
         }
       }, {
         "id": "post_away",
