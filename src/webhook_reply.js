@@ -10,7 +10,7 @@
       };
     }
     // Check for thread events only
-    if (body.event.thread_ts && !http_event.headers['X-Slack-Retry-Num']) {
+    if (body.event.thread_ts) {
       // Look for the parent message by thread timestamp
       let message = api.query("SELECT * FROM slack.get_channels_history WHERE channel=@channel AND ts=@ts", {channel: env.get('home'), ts: body.event.thread_ts})[0];
       /* If you would like to see the workspace id, it is stored below
